@@ -15,6 +15,9 @@ GROQ_API_BASE = "https://api.groq.com/openai/v1"
 # OpenRouter configuration
 OPENROUTER_API_BASE = "https://openrouter.ai/api/v1"
 
+# DeepSeek configuration
+DEEPSEEK_API_BASE = "https://api.deepseek.com"
+
 # Ollama configuration
 OLLAMA_URL = os.getenv('OLLAMA_URL', 'http://localhost:11434')
 
@@ -33,8 +36,8 @@ INFERENCE_SERVICE = os.getenv("INFERENCE_SERVICE", "anthropic")
 # Set the model based on the inference service
 if INFERENCE_SERVICE == "anthropic":
     MODEL = os.getenv("MODEL", "claude-3-haiku-20240307")
-elif INFERENCE_SERVICE in ["openai", "groq", "openrouter"]:
-    MODEL = os.getenv("MODEL", "gpt-3.5-turbo")
+elif INFERENCE_SERVICE in ["openai", "groq", "openrouter", "deepseek"]:
+    MODEL = os.getenv("MODEL", "deepseek-v4-flash" if INFERENCE_SERVICE == "deepseek" else "gpt-3.5-turbo")
 elif INFERENCE_SERVICE == "ollama":
     MODEL = os.getenv("MODEL", "llama2")
 else:

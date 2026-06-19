@@ -2,7 +2,7 @@ import os
 import time
 from datetime import datetime, timezone
 from invoke_types import InvocationRequest, Actor, LLMMessage
-from settings import MODEL, MODEL_KEY, MAX_TOKENS, INFERENCE_SERVICE, API_KEY, OLLAMA_URL, GROQ_API_BASE, OPENROUTER_API_BASE
+from settings import MODEL, MODEL_KEY, MAX_TOKENS, INFERENCE_SERVICE, API_KEY, OLLAMA_URL, GROQ_API_BASE, OPENROUTER_API_BASE, DEEPSEEK_API_BASE
 import json
 import anthropic
 import openai
@@ -37,6 +37,8 @@ def invoke_openai(system_prompt: str, messages: list[LLMMessage]):
         client = openai.OpenAI(api_key=API_KEY, base_url=GROQ_API_BASE)
     elif INFERENCE_SERVICE == 'openrouter':
         client = openai.OpenAI(api_key=API_KEY, base_url=OPENROUTER_API_BASE)
+    elif INFERENCE_SERVICE == 'deepseek':
+        client = openai.OpenAI(api_key=API_KEY, base_url=DEEPSEEK_API_BASE)
     else:  # Default OpenAI
         client = openai.OpenAI(api_key=API_KEY)
     
@@ -68,7 +70,7 @@ def invoke_ai(conn,
 
     if INFERENCE_SERVICE == 'anthropic':
         text_response, input_tokens, output_tokens = invoke_anthropic(system_prompt, messages)
-    elif INFERENCE_SERVICE in ['openai', 'groq', 'openrouter']:
+    elif INFERENCE_SERVICE in ['openai', 'groq', 'openrouter', 'deepseek']:
         text_response, input_tokens, output_tokens = invoke_openai(system_prompt, messages)
     elif INFERENCE_SERVICE == 'ollama':
         text_response, input_tokens, output_tokens = invoke_ollama(system_prompt, messages)
