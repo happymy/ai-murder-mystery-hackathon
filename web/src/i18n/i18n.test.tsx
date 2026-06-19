@@ -1,5 +1,11 @@
+import i18n from './i18n';
 import en from './locales/en.json';
 import zhCN from './locales/zh-CN.json';
+
+test('i18n initializes with en and zh-CN resources', () => {
+  expect(i18n.isInitialized).toBe(true);
+  expect(i18n.language).toMatch(/^(en|zh-CN|dev$)/);
+});
 
 test('en and zh-CN have the same keys', () => {
   const enKeys = Object.keys(en).sort();
