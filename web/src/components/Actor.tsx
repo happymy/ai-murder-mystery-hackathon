@@ -9,6 +9,7 @@ import invokeAI from "../api/invoke";
 import ActorImage from "./ActorImage";
 import { useSessionContext } from "../providers/sessionContext";
 import CHARACTER_DATA from "../characters.json";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   actor: Actor;
@@ -63,11 +64,12 @@ const ActorChat = ({ actor }: Props) => {
   const { setActors, globalStory } = useMysteryContext();
   const [loading, setLoading] = useState(false);
   const sessionId = useSessionContext();
+  const { t } = useTranslation();
 
   const handleSendMessage = () => {
     const newMessage: LLMMessage = {
       role: "user",
-      content: "Detective Sheerluck: " + currMessage,
+      content: t('detectivePrefix') + currMessage,
     };
 
     sendChat([...actor.messages, newMessage], setActors, globalStory, sessionId, actor, setLoading);
@@ -105,7 +107,7 @@ const ActorChat = ({ actor }: Props) => {
             border: "1px dotted black",
           }}
         >
-          {m.role === "user" ? "" : actor.name + ":"} {m.content}
+          {m.role === "user" ? "" : actor.name + t('colon')} {m.content}
         </div>
       ))}
       <Group>
@@ -113,7 +115,7 @@ const ActorChat = ({ actor }: Props) => {
           <Loader />
         ) : (
           <TextInput
-            placeholder={`Talk to ${actor.name}`}
+            placeholder={t('talkTo', { name: actor.name })}
             onChange={(event) => {
               setCurrMessage(event.currentTarget.value);
             }}
@@ -124,7 +126,7 @@ const ActorChat = ({ actor }: Props) => {
         )}
 
         <Button disabled={loading} onClick={handleSendMessage}>
-          Send
+          {t('send')}
         </Button>
       </Group>
     </Stack>
