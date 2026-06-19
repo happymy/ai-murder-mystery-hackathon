@@ -20,7 +20,8 @@ def get_actor_prompt(actor: Actor):
             f"{actor.context} {actor.secret}")
 
 def get_system_prompt(request: InvocationRequest):
-    return request.global_story + (" Detective Sheerluck is interrogating suspects to find Victim Cho's killer. The previous text is the background to this story.") + get_actor_prompt(request.actor)
+    lang_instruction = "Respond in English." if request.language == "en" else "请用中文回复。"
+    return lang_instruction + " " + request.global_story + (" Detective Sheerluck is interrogating suspects to find Victim Cho's killer. The previous text is the background to this story.") + get_actor_prompt(request.actor)
 
 def invoke_anthropic(system_prompt: str, messages: list[LLMMessage]):
     client = anthropic.Anthropic(api_key=API_KEY)

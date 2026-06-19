@@ -45,6 +45,7 @@ const sendChat = async (
       ...actor,
       messages,
     },
+    language: i18n.language,
   });
 
   setActor({
@@ -64,7 +65,7 @@ const ActorChat = ({ actor }: Props) => {
   const { setActors, globalStory } = useMysteryContext();
   const [loading, setLoading] = useState(false);
   const sessionId = useSessionContext();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleSendMessage = () => {
     const newMessage: LLMMessage = {

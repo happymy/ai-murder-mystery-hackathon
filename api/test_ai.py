@@ -59,6 +59,21 @@ class TestGetSystemPrompt:
         prompt = get_system_prompt(sample_request)
         assert "A murder mystery" in prompt
 
+    def test_default_language_is_english(self, sample_request):
+        prompt = get_system_prompt(sample_request)
+        assert "Respond in English" in prompt
+
+    def test_chinese_language(self, sample_actor):
+        req = InvocationRequest(
+            global_story="Story.",
+            actor=sample_actor,
+            session_id="s",
+            character_file_version="v1",
+            language="zh-CN",
+        )
+        prompt = get_system_prompt(req)
+        assert "请用中文回复" in prompt
+
     def test_includes_actor_prompt(self, sample_request):
         prompt = get_system_prompt(sample_request)
         assert "Test Character" in prompt
