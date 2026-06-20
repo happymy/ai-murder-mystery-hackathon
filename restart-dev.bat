@@ -2,9 +2,15 @@
 chcp 65001 >nul
 title AI Murder Mystery - Dev Server
 
-echo === 关闭旧进程 ===
-taskkill /f /im uvicorn.exe 2>nul
-taskkill /f /im node.exe 2>nul
+echo === 按端口查找并关闭旧进程 ===
+for /f "tokens=5" %%a in ('netstat -ano ^| find ":10000 " ^| find "LISTENING" 2^>nul') do (
+    echo   结束端口 10000 进程 PID=%%a
+    taskkill /f /pid %%a 2>nul
+)
+for /f "tokens=5" %%a in ('netstat -ano ^| find ":3000 " ^| find "LISTENING" 2^>nul') do (
+    echo   结束端口 3000 进程 PID=%%a
+    taskkill /f /pid %%a 2>nul
+)
 timeout /t 3 >nul
 
 echo.
@@ -18,8 +24,7 @@ timeout /t 3 >nul
 echo.
 echo === 启动前端 (port 3000) ===
 cd /d "%~dp0web"
-set REACT_APP_API_URL=http://localhost:10000
-start "Frontend" cmd /c "npx react-scripts start"
+start "Frontend" cmd /c "set REACT_APP_API_URL=http://localhost:10000 && npx react-scripts start"
 cd /d "%~dp0"
 
 echo.

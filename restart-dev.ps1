@@ -1,16 +1,19 @@
 # 重启前后端开发服务器
 
-Write-Host "=== 关闭旧进程 ===" -ForegroundColor Yellow
-Get-Process -Name "uvicorn", "node", "python" -ErrorAction SilentlyContinue | ForEach-Object {
-    Write-Host "  结束进程: $($_.ProcessName) PID=$($_.Id)" -ForegroundColor Gray
-    $_ | Stop-Process -Force
+Write-Host "=== 按端口查找并关闭旧进程 ===" -ForegroundColor Yellow
+Get-NetTCPConnection -LocalPort 10000 -ErrorAction SilentlyContinue | ForEach-Object {
+    Write-Host "  结束端口 10000 进程 PID=$($_.OwningProcess)" -ForegroundColor Gray
+    Stop-Process -Id $_.OwningProcess -Force
+}
+Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object {
+    Write-Host "  结束端口 3000 进程 PID=$($_.OwningProcess)" -ForegroundColor Gray
+    Stop-Process -Id $_.OwningProcess -Force
 }
 Start-Sleep -Seconds 2
 
 Write-Host ""
 Write-Host "=== 启动后端 (port 10000) ===" -ForegroundColor Green
 Push-Location "$PSScriptRoot\api"
-$env:REACT_APP_API_URL = $null
 Start-Process -NoNewWindow -FilePath "pipenv" -ArgumentList "run","uvicorn","main:app","--host","0.0.0.0","--port","10000"
 Pop-Location
 
