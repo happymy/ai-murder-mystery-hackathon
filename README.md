@@ -8,12 +8,14 @@
 </a>
 
 ## Setup
+
 1. Git clone the repo
 ```
 git clone https://github.com/ironman5366/ai-murder-mystery-hackathon.git
 cd ai-murder-mystery-hackathon
 ```
-2. Add your API key to api/.env file (optionally can export conversations to postgres with DB_CONN_URL="postgresql://link_to_db_conn")
+
+2. Add your API key to `api/.env` (optionally export conversations to Postgres with `DB_CONN_URL="postgresql://..."`)
 
 Supported inference services: `anthropic`, `openai`, `groq`, `openrouter`, `ollama`, `deepseek`
 
@@ -23,19 +25,28 @@ API_KEY="YOUR_API_KEY_HERE"
 MODEL=deepseek-v4-flash
 MAX_TOKENS=1000
 ```
+
 3. Install Node dependencies
 ```
-web/npm i
+cd web && npm install
 ```
-3. Start up the api
+
+4. Start the API
 ```
-bash api_start.sh
+cd api && pip install -r requirements.txt && python main.py
 ```
-4. In separate terminal, start up the web interface
+
+Or on Windows:
 ```
-bash web_start.sh
+.\restart-dev.ps1
 ```
-5. Play the game!
+
+5. In a separate terminal, start the frontend
+```
+cd web && npm start
+```
+
+6. Play the game at http://localhost:3000/
 
 ## Setup (with Docker)
 
@@ -60,31 +71,43 @@ export MODEL=deepseek-v4-flash
 docker compose up
 ```
 
-This should start three containers (the database, Python API, and React frontend) and create a persistent volume for the database.
+This starts three containers (the database, Python API, and React frontend) and creates a persistent volume for the database.
 
 4. Play the game at http://localhost:3000/
 
-If you change any files (for example, changing the model in `/api/settings.py`), then you will likely need to rebuild the images:
+To rebuild images after changing files (e.g. changing the model in `/api/settings.py`):
 
 ```
 docker compose up --build
 ```
 
-5. To shut everything down, hit `CTRL-C` or click the stop button in the Docker GUI. 
+5. To shut down, hit `CTRL-C` or click the stop button in the Docker GUI. Clean up by deleting all containers and the associated database volume.
 
-To clean up, use the Docker GUI to delete all containers then go to the "Volumes" tab to delete the associated database volume.
+## Running Tests
 
-## Additional info
+**Frontend** (React / Vitest):
+```
+cd web && npm test
+```
+
+**Backend** (Python / pytest):
+```
+cd api && pytest
+```
+
+## Additional Info
 
 You can read the full murder story by checking out [web/src/characters.json](https://github.com/ironman5366/ai-murder-mystery-hackathon/blob/main/web/src/characters.json), which contains the full context provided to each character.
 
-To see how our prompting system works, including our critique and revision approach, check out [api/ai.py](https://github.com/ironman5366/ai-murder-mystery-hackathon/blob/main/api/ai.py).
+To see how the prompting system works (critique and revision approach), check out [api/ai.py](https://github.com/ironman5366/ai-murder-mystery-hackathon/blob/main/api/ai.py).
 
-Twitter thread on the game: https://x.com/humanscotti/status/1810777932568399933
+Twitter thread: https://x.com/humanscotti/status/1810777932568399933
 
-## Multi-language support
+## Multi-language Support
 
 The web interface supports i18n with English (default) and Simplified Chinese. Language is auto-detected from browser settings and can be manually switched via the dropdown in the top-right corner.
+
+Character names and bios are translated in both languages. The AI's response language follows the user's selected interface language.
 
 To add a new language, add a translation file to `web/src/i18n/locales/` and register it in `web/src/i18n/i18n.ts`.
 

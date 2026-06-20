@@ -14,6 +14,7 @@
 git clone https://github.com/ironman5366/ai-murder-mystery-hackathon.git
 cd ai-murder-mystery-hackathon
 ```
+
 2. 在 `api/.env` 中添加你的 API 密钥（可选：通过 `DB_CONN_URL="postgresql://数据库地址"` 将对话记录到 Postgres）
 
 支持的推理服务：`anthropic`、`openai`、`groq`、`openrouter`、`ollama`、`deepseek`
@@ -24,19 +25,28 @@ API_KEY="你的API密钥"
 MODEL=deepseek-v4-flash
 MAX_TOKENS=1000
 ```
+
 3. 安装 Node 依赖
 ```
 cd web && npm install
 ```
+
 4. 启动 API
 ```
-bash api_start.sh
+cd api && pip install -r requirements.txt && python main.py
 ```
+
+Windows 用户也可使用：
+```
+.\restart-dev.ps1
+```
+
 5. 另开终端，启动前端界面
 ```
-bash web_start.sh
+cd web && npm start
 ```
-6. 开始游戏！
+
+6. 在浏览器中打开 http://localhost:3000/ 开始游戏！
 
 ## 使用 Docker 部署
 
@@ -62,12 +72,24 @@ docker compose up
 
 4. 在 http://localhost:3000/ 游玩
 
-如果修改了任何文件（例如在 `/api/settings.py` 中更改模型），需要重建镜像：
+修改文件后重建镜像：
 ```
 docker compose up --build
 ```
 
-5. 停止服务：按 `CTRL-C` 或在 Docker GUI 中点击停止按钮。清理时使用 Docker GUI 删除所有容器，然后到"Volumes"选项卡删除关联的数据库卷。
+5. 停止服务：按 `CTRL-C` 或在 Docker GUI 中点击停止按钮。清理时删除所有容器和关联的数据库卷。
+
+## 运行测试
+
+**前端**（React / Vitest）：
+```
+cd web && npm test
+```
+
+**后端**（Python / pytest）：
+```
+cd api && pytest
+```
 
 ## 更多信息
 
@@ -80,6 +102,8 @@ Twitter 相关推文：https://x.com/humanscotti/status/1810777932568399933
 ## 多语言支持
 
 前端界面支持国际化，默认英语和简体中文。语言根据浏览器设置自动检测，也可通过右上角的下拉菜单手动切换。
+
+角色名称和简介已翻译为两种语言。AI 的回复语言会跟随用户选择的界面语言。
 
 添加新语言：在 `web/src/i18n/locales/` 中添加翻译文件，并在 `web/src/i18n/i18n.ts` 中注册。
 
