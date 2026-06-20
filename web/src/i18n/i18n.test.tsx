@@ -4,7 +4,7 @@ import zhCN from './locales/zh-CN.json';
 
 test('i18n initializes with en and zh-CN resources', () => {
   expect(i18n.isInitialized).toBe(true);
-  expect(i18n.language).toMatch(/^(en|zh-CN|dev$)/);
+  expect(['en', 'en-US', 'zh', 'zh-CN']).toContain(i18n.language);
 });
 
 test('en and zh-CN have the same keys', () => {

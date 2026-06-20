@@ -12,10 +12,9 @@ i18n
     resources: {
       en: { translation: en },
       'zh-CN': { translation: zhCN },
+      zh: { translation: zhCN },
     },
     fallbackLng: 'en',
-    supportedLngs: ['en', 'zh-CN'],
-    nonExplicitSupportedLngs: true,
     interpolation: {
       escapeValue: false,
     },
