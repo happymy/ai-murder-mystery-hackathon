@@ -1,10 +1,12 @@
 # Use the official Python image from Docker Hub.
-FROM python:3.14-slim
+FROM python:3.14.2-slim
 
 # Set environment variables.
 # Send output straight to terminal (easier debugging).
 # https://stackoverflow.com/a/59812588
 ENV PYTHONUNBUFFERED=1
+ENV PIP_RETRIES=10
+ENV PIP_TIMEOUT=120
 
 # Set the working directory
 WORKDIR /app
