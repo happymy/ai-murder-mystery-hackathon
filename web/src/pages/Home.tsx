@@ -14,7 +14,7 @@ import MultipleChoiceGame from '../components/MultipleChoiceGame';
 import { useTranslation } from 'react-i18next';
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { actors, setActors, globalStory } = useMysteryContext(); 
   const [currActor, setCurrActor] = useState<number>(0);
   const [opened, { toggle }] = useDisclosure();
@@ -104,7 +104,7 @@ export default function Home() {
 
   const forceTextResponseToLarry = (actor: Actor, forcedMessage: string) => {
     const newMessage: LLMMessage = { role: "user", content: forcedMessage };
-    sendChat([...actor.messages, newMessage], setActors, globalStory, sessionId, actor, setLoading);
+    sendChat([...actor.messages, newMessage], setActors, globalStory, sessionId, actor, setLoading, i18n.language);
   };
 
   return (

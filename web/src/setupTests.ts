@@ -14,6 +14,9 @@ jest.mock('react-i18next', () => ({
       if (params && 'name' in params) {
         return `${key}: ${params.name}`;
       }
+      if (typeof params === 'object' && params !== null && 'defaultValue' in params) {
+        return (params as Record<string, unknown>).defaultValue as string;
+      }
       return key;
     },
     i18n: {

@@ -1,13 +1,17 @@
 # Restart dev servers (backend + frontend)
 
 Write-Host "=== Kill old processes on ports 10000 and 3000 ===" -ForegroundColor Yellow
-Get-NetTCPConnection -LocalPort 10000 -ErrorAction SilentlyContinue | ForEach-Object {
-    Write-Host "  Killing port 10000 PID=$($_.OwningProcess)" -ForegroundColor Gray
-    Stop-Process -Id $_.OwningProcess -Force
-}
-Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object {
-    Write-Host "  Killing port 3000 PID=$($_.OwningProcess)" -ForegroundColor Gray
-    Stop-Process -Id $_.OwningProcess -Force
+
+$projectRoot = $PSScriptRoot
+$ports = @(10000, 3000)
+foreach ($port in $ports) {
+    Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | Where-Object State -eq Listen | ForEach-Object {
+        $proc = Get-CimInstance Win32_Process -Filter "ProcessId = $($_.OwningProcess)" -ErrorAction SilentlyContinue
+        if ($proc -and $proc.CommandLine -match [regex]::Escape($projectRoot)) {
+            Write-Host "  Killing port $port PID=$($_.OwningProcess)" -ForegroundColor Gray
+            Stop-Process -Id $_.OwningProcess -Force
+        }
+    }
 }
 Start-Sleep -Seconds 2
 

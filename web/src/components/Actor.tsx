@@ -21,7 +21,8 @@ const sendChat = async (
   globalStory: string,
   sessionId: string,
   actor: Actor,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  language: string
 ) => {
   setLoading(true);
   const setActor = (a: Partial<Actor>) => {
@@ -45,7 +46,7 @@ const sendChat = async (
       ...actor,
       messages,
     },
-    language: i18n.language,
+    language,
   });
 
   setActor({
@@ -66,6 +67,7 @@ const ActorChat = ({ actor }: Props) => {
   const [loading, setLoading] = useState(false);
   const sessionId = useSessionContext();
   const { t, i18n } = useTranslation();
+  const displayName = t(`character${actor.name.replace(/\s+/g, '')}`, { defaultValue: actor.name });
 
   const handleSendMessage = () => {
     const newMessage: LLMMessage = {
@@ -73,7 +75,7 @@ const ActorChat = ({ actor }: Props) => {
       content: t('detectivePrefix') + currMessage,
     };
 
-    sendChat([...actor.messages, newMessage], setActors, globalStory, sessionId, actor, setLoading);
+    sendChat([...actor.messages, newMessage], setActors, globalStory, sessionId, actor, setLoading, i18n.language);
     setCurrMessage("");
   };
 
@@ -98,7 +100,7 @@ const ActorChat = ({ actor }: Props) => {
           fontWeight: "bold",
         }}
       >
-        {actor.name}
+        {displayName}
       </Text>
       <div>{actor.bio}</div>
       {actor.messages.map((m, i) => (
@@ -108,7 +110,7 @@ const ActorChat = ({ actor }: Props) => {
             border: "1px dotted black",
           }}
         >
-          {m.role === "user" ? "" : actor.name + t('colon')} {m.content}
+          {m.role === "user" ? "" : displayName + t('colon')} {m.content}
         </div>
       ))}
       <Group>
@@ -116,7 +118,7 @@ const ActorChat = ({ actor }: Props) => {
           <Loader />
         ) : (
           <TextInput
-            placeholder={t('talkTo', { name: actor.name })}
+            placeholder={t('talkTo', { name: displayName })}
             onChange={(event) => {
               setCurrMessage(event.currentTarget.value);
             }}
