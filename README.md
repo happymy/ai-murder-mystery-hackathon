@@ -13,11 +13,15 @@
 git clone https://github.com/ironman5366/ai-murder-mystery-hackathon.git
 cd ai-murder-mystery-hackathon
 ```
-2. Add your Anthropic API to api/.env file (optionally can export conversations to postgres with DB_CONN_URL="postgresql://link_to_db_conn")
+2. Add your API key to api/.env file (optionally can export conversations to postgres with DB_CONN_URL="postgresql://link_to_db_conn")
+
+Supported inference services: `anthropic`, `openai`, `groq`, `openrouter`, `ollama`, `deepseek`
+
 ```
-nano api/.env
-export ANTHROPIC_API_KEY="YOUR_API_KEY_HERE"
-(<ctrl+x , y, enter> to save changes and exit nano)
+INFERENCE_SERVICE=deepseek
+API_KEY="YOUR_API_KEY_HERE"
+MODEL=deepseek-v4-flash
+MAX_TOKENS=1000
 ```
 3. Install Node dependencies
 ```
@@ -42,10 +46,12 @@ git clone https://github.com/ironman5366/ai-murder-mystery-hackathon.git
 cd ai-murder-mystery-hackathon
 ```
 
-2. Set environment variables:
+2. Set environment variables (see [api/.env.example](api/.env.example) for all options):
 
 ```
-export ANTHROPIC_API_KEY="YOUR_API_KEY_HERE"
+export INFERENCE_SERVICE=deepseek
+export API_KEY="YOUR_API_KEY_HERE"
+export MODEL=deepseek-v4-flash
 ```
 
 3. Open a terminal in the folder containing this README, then run:
@@ -58,7 +64,7 @@ This should start three containers (the database, Python API, and React frontend
 
 4. Play the game at http://localhost:3000/
 
-If you change any files (for example, changing the Anthropic model in `/api/settings.py`), then you will likely need to rebuild the images:
+If you change any files (for example, changing the model in `/api/settings.py`), then you will likely need to rebuild the images:
 
 ```
 docker compose up --build
@@ -75,6 +81,12 @@ You can read the full murder story by checking out [web/src/characters.json](htt
 To see how our prompting system works, including our critique and revision approach, check out [api/ai.py](https://github.com/ironman5366/ai-murder-mystery-hackathon/blob/main/api/ai.py).
 
 Twitter thread on the game: https://x.com/humanscotti/status/1810777932568399933
+
+## Multi-language support
+
+The web interface supports i18n with English (default) and Simplified Chinese. Language is auto-detected from browser settings and can be manually switched via the dropdown in the top-right corner.
+
+To add a new language, add a translation file to `web/src/i18n/locales/` and register it in `web/src/i18n/i18n.ts`.
 
 ## Contact
 
