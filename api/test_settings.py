@@ -2,7 +2,8 @@ import os
 from unittest.mock import patch
 
 
-def test_default_inference_service():
+@patch('dotenv.load_dotenv')
+def test_default_inference_service(mock_load_dotenv):
     with patch.dict(os.environ, {}, clear=True):
         import importlib
         import settings
@@ -35,7 +36,8 @@ def test_groq_inference_service():
         assert settings.GROQ_API_BASE == 'https://api.groq.com/openai/v1'
 
 
-def test_max_tokens_default():
+@patch('dotenv.load_dotenv')
+def test_max_tokens_default(mock_load_dotenv):
     with patch.dict(os.environ, {}, clear=True):
         import importlib
         import settings

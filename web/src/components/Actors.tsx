@@ -15,8 +15,8 @@ export default function Actors() {
         <Grid>
           {Object.values(actors).map((a, i) => {
             return (
-              <Grid.Col span={3}>
-                <ActorChat actor={a} key={i} />
+              <Grid.Col span={3} key={i}>
+                <ActorChat actor={a} />
               </Grid.Col>
             );
           })}
